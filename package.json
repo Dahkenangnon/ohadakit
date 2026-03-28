@@ -1,0 +1,75 @@
+{
+  "name": "ohadakit",
+  "version": "1.0.0",
+  "description": "TypeScript SDK for the OHADA/SYSCOHADA chart of accounts — O(1) lookups, querying, custom accounts, i18n, and export",
+  "type": "module",
+  "main": "./dist/cjs/index.js",
+  "module": "./dist/esm/index.js",
+  "types": "./dist/types/index.d.ts",
+  "sideEffects": false,
+  "exports": {
+    ".": {
+      "types": "./dist/types/index.d.ts",
+      "browser": "./dist/browser/ohadakit.umd.js",
+      "import": "./dist/esm/index.js",
+      "require": "./dist/cjs/index.js"
+    },
+    "./browser": {
+      "types": "./dist/types/index.d.ts",
+      "import": "./dist/browser/ohadakit.iife.js",
+      "default": "./dist/browser/ohadakit.umd.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "dist/esm/**/*.js",
+    "dist/cjs/**/*.js",
+    "dist/types/**/*.d.ts",
+    "dist/browser/**/*.js",
+    "!dist/**/*.map",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "build": "npm run clean && npm run build:types && npm run build:lib && npm run build:browser && npm run build:report",
+    "build:types": "tsc --project tsconfig.build.json",
+    "build:lib": "vite build --mode production",
+    "build:browser": "vite build --config vite.config.browser.ts --mode production",
+    "build:report": "node scripts/build-report.js",
+    "clean": "rm -rf dist",
+    "test": "vitest run",
+    "test:watch": "vitest --watch",
+    "test:coverage": "vitest run --coverage",
+    "typecheck": "tsc --noEmit",
+    "prepublishOnly": "npm run typecheck && npm run test && npm run build"
+  },
+  "keywords": [
+    "ohada",
+    "syscohada",
+    "accounting",
+    "chart-of-accounts",
+    "ledger",
+    "typescript",
+    "sdk"
+  ],
+  "author": "Justin Dah-kenangnon <dah.kenangnon@gmail.com>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Dahkenangnon/OhadaKit.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Dahkenangnon/OhadaKit/issues"
+  },
+  "homepage": "https://github.com/Dahkenangnon/OhadaKit#readme",
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "@vitest/coverage-v8": "^1.0.0",
+    "typescript": "^5.3.0",
+    "vite": "^7.2.6",
+    "vitest": "^1.0.0"
+  },
+  "engines": {
+    "node": ">=16.0.0"
+  }
+}

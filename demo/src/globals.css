@@ -1,0 +1,15 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  @apply bg-gray-50 text-gray-900 antialiased;
+}
+
+code {
+  @apply bg-gray-100 rounded px-1.5 py-0.5 text-sm font-mono;
+}
+
+pre code {
+  @apply bg-transparent p-0;
+}
