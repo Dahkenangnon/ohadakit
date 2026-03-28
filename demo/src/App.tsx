@@ -46,7 +46,7 @@ export default function App() {
         </nav>
         <div className="p-4 border-t border-gray-200 text-xs text-gray-400">
           <a
-            href="https://github.com/Dahkenangnon/OhadaKit"
+            href="https://github.com/Dahkenangnon/ohadakit"
             target="_blank"
             rel="noopener noreferrer"
             className="hover:text-gray-600"

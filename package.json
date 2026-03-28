@@ -56,12 +56,12 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Dahkenangnon/OhadaKit.git"
+    "url": "git+https://github.com/Dahkenangnon/ohadakit.git"
   },
   "bugs": {
-    "url": "https://github.com/Dahkenangnon/OhadaKit/issues"
+    "url": "https://github.com/Dahkenangnon/ohadakit/issues"
   },
-  "homepage": "https://github.com/Dahkenangnon/OhadaKit#readme",
+  "homepage": "https://github.com/Dahkenangnon/ohadakit#readme",
   "devDependencies": {
     "@types/node": "^20.0.0",
     "@vitest/coverage-v8": "^1.0.0",

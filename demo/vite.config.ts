@@ -7,7 +7,7 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 
 export default defineConfig({
   plugins: [react()],
-  base: '/OhadaKit/',
+  base: '/ohadakit/',
   resolve: {
     alias: {
       'ohadakit': resolve(__dirname, '../src/index.ts'),

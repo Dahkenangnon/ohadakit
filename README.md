@@ -8,7 +8,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.0+-3178c6.svg)](https://www.typescriptlang.org/)
 
-[Installation](#installation) · [Quick Start](#quick-start) · [API](#core-api) · [GitHub](https://github.com/Dahkenangnon/OhadaKit)
+[Installation](#installation) · [Quick Start](#quick-start) · [API](#core-api) · [GitHub](https://github.com/Dahkenangnon/ohadakit)
 
 </div>
 
@@ -378,7 +378,7 @@ MIT © [@Dahkenangnon](https://github.com/Dahkenangnon)
 
 <div align="center">
 
-**[GitHub](https://github.com/Dahkenangnon/OhadaKit)** · **[Issues](https://github.com/Dahkenangnon/OhadaKit/issues)** · **[npm](https://www.npmjs.com/package/ohadakit)**
+**[GitHub](https://github.com/Dahkenangnon/ohadakit)** · **[Issues](https://github.com/Dahkenangnon/ohadakit/issues)** · **[npm](https://www.npmjs.com/package/ohadakit)**
 
 Questions or feedback? Reach out at **dah.kenangnon@gmail.com**
 

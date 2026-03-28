@@ -21,7 +21,7 @@ export default defineConfig({
           name: 'OhadaKit',
           entryFileNames: 'ohadakit.umd.js',
           banner:
-            '/*! OhadaKit SDK | MIT License | https://github.com/Dahkenangnon/OhadaKit */',
+            '/*! OhadaKit SDK | MIT License | https://github.com/Dahkenangnon/ohadakit */',
           compact: true,
         },
         {
@@ -29,7 +29,7 @@ export default defineConfig({
           name: 'OhadaKit',
           entryFileNames: 'ohadakit.iife.js',
           banner:
-            '/*! OhadaKit SDK | MIT License | https://github.com/Dahkenangnon/OhadaKit */',
+            '/*! OhadaKit SDK | MIT License | https://github.com/Dahkenangnon/ohadakit */',
           compact: true,
         },
       ],
