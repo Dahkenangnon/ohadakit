@@ -15,7 +15,7 @@ O(1) lookups · fluent query builder · custom accounts · i18n · export · zer
 
 ---
 
-OhadaKit is a production-ready SDK for working with the **OHADA/SYSCOHADA accounting plan** — the standardised chart of accounts used across 17 francophone African countries. It ships the full 1 000+ account tree out of the box and exposes a composable, type-safe API for lookups, querying, custom extensions, multilingual names, and data export.
+OhadaKit is a production-ready SDK for working with the **OHADA/SYSCOHADA accounting plan** — the standardised chart of accounts used across 17 West and Central African states. It ships the full 1 000+ account tree out of the box and exposes a composable, type-safe API for lookups, querying, custom extensions, multilingual names, and data export.
 
 **It manages the chart of accounts.** Journal entries, balances, and financial statements belong in your application.
 
@@ -410,28 +410,39 @@ async function saveState(db: Database) {
 
 ## OHADA Chart Structure
 
-The SYSCOHADA plan uses a decimal codification across 9 classes.
-Accounts are structured in 3 levels, from 2 to 4 digits.
-Classes (single digit) are grouping designators, not account codes.
+SYSCOHADA uses a **decimal codification** across **9 classes** (codes 1–9). Each class digit is the first digit of the account codes within that class — it is a grouping designator, not a postable account code. Accounts proper are identified by codes of **2 to 4 digits**, constituting 3 levels:
 
 ```
-Class  (1 digit)   → e.g. 4
-  Main account     → e.g. 41
-    Sub-account    → e.g. 411
-      Detail       → e.g. 4111
+[Class — grouping designator, not a postable account]
+  e.g. 4  →  Tiers
+
+[Account levels — postable codes, 2 to 4 digits]
+  41      Main account    (2 digits)   ← first postable level
+  411     Sub-account     (3 digits)
+  4111    Detail          (4 digits)   ← base maximum per SYSCOHADA
 ```
 
-| Class | Label |
-|-------|-------|
-| 1 | Ressources durables |
-| 2 | Actif immobilisé |
-| 3 | Stocks |
-| 4 | Tiers |
-| 5 | Trésorerie |
-| 6 | Charges des activités ordinaires |
-| 7 | Produits des activités ordinaires |
-| 8 | Autres charges et autres produits |
-| 9 | Engagements hors bilan |
+> The base codification of SYSCOHADA is limited to a maximum of four digits for
+> divisional accounts (*comptes divisionnaires*). Enterprises may open further
+> subdivisions beyond four digits to meet operational needs without altering the
+> mandatory normative codes.
+
+| Class | Label | Notes |
+|-------|-------|-------|
+| 1 | Ressources durables | Mandatory |
+| 2 | Actif immobilisé | Mandatory |
+| 3 | Stocks | Mandatory |
+| 4 | Tiers | Mandatory |
+| 5 | Trésorerie | Mandatory |
+| 6 | Charges des activités ordinaires | Mandatory |
+| 7 | Produits des activités ordinaires | Mandatory |
+| 8 | Autres charges et autres produits | Mandatory |
+| 9 | Engagements hors bilan et comptabilité analytique de gestion (CAGE) | **Optional** |
+
+> **Class 9** is split into two sub-sections: accounts 90–91 record off-balance-sheet
+> commitments (*engagements hors bilan*); accounts 92–99 are reserved for management
+> accounting (*comptabilité analytique de gestion*, CAGE). Its use is explicitly
+> optional under the SYSCOHADA Uniform Act.
 
 ---
 
