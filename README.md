@@ -23,6 +23,7 @@ OhadaKit is a production-ready SDK for working with the **OHADA/SYSCOHADA accoun
 
 ## Table of Contents
 
+- [Table of Contents](#table-of-contents)
 - [Features](#features)
 - [Installation](#installation)
 - [Quick Start](#quick-start)
@@ -33,10 +34,13 @@ OhadaKit is a production-ready SDK for working with the **OHADA/SYSCOHADA accoun
   - [Internationalization](#internationalization)
   - [Custom Accounts](#custom-accounts)
   - [AccountBook — unified facade](#accountbook--unified-facade)
-  - [Notes & Storage](#notes--storage)
+    - [Snapshot \& restore](#snapshot--restore)
+    - [`AccountBook` vs `LedgerEngine`](#accountbook-vs-ledgerengine)
+  - [Notes \& Storage](#notes--storage)
   - [Export](#export)
   - [Validation](#validation)
 - [Integrating with an Accounting App](#integrating-with-an-accounting-app)
+  - [Responsibility boundary](#responsibility-boundary)
 - [OHADA Chart Structure](#ohada-chart-structure)
 - [Environment Support](#environment-support)
 - [Contributing](#contributing)
@@ -406,7 +410,9 @@ async function saveState(db: Database) {
 
 ## OHADA Chart Structure
 
-The SYSCOHADA plan organises accounts into a 4-level decimal hierarchy.
+The SYSCOHADA plan uses a decimal codification across 9 classes.
+Accounts are structured in 3 levels, from 2 to 4 digits.
+Classes (single digit) are grouping designators, not account codes.
 
 ```
 Class  (1 digit)   → e.g. 4
