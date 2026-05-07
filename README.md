@@ -1,36 +1,82 @@
 <div align="center">
 
-# OhadaKit
+<h1>OhadaKit</h1>
 
-**Production-ready TypeScript SDK for the OHADA/SYSCOHADA accounting chart of accounts**
+<p><strong>TypeScript SDK for the OHADA/SYSCOHADA chart of accounts</strong><br/>
+O(1) lookups · fluent query builder · custom accounts · i18n · export · zero dependencies</p>
 
-[![npm version](https://img.shields.io/npm/v/ohadakit.svg)](https://www.npmjs.com/package/ohadakit)
-[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5.0+-3178c6.svg)](https://www.typescriptlang.org/)
-
-[Installation](#installation) · [Quick Start](#quick-start) · [API](#core-api) · [GitHub](https://github.com/Dahkenangnon/ohadakit)
+[![npm version](https://img.shields.io/npm/v/ohadakit.svg?style=flat-square)](https://www.npmjs.com/package/ohadakit)
+[![npm downloads](https://img.shields.io/npm/dm/ohadakit.svg?style=flat-square)](https://www.npmjs.com/package/ohadakit)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg?style=flat-square)](https://opensource.org/licenses/MIT)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.0+-3178c6.svg?style=flat-square)](https://www.typescriptlang.org/)
+[![Node.js](https://img.shields.io/badge/Node.js-%3E%3D16-339933.svg?style=flat-square)](https://nodejs.org/)
 
 </div>
 
 ---
 
+OhadaKit is a production-ready SDK for working with the **OHADA/SYSCOHADA accounting plan** — the standardised chart of accounts used across 17 francophone African countries. It ships the full 1 000+ account tree out of the box and exposes a composable, type-safe API for lookups, querying, custom extensions, multilingual names, and data export.
+
+**It manages the chart of accounts.** Journal entries, balances, and financial statements belong in your application.
+
+---
+
+## Table of Contents
+
+- [Features](#features)
+- [Installation](#installation)
+- [Quick Start](#quick-start)
+- [Core API](#core-api)
+  - [Account Access](#account-access)
+  - [Query Builder](#query-builder)
+  - [Account Relationships](#account-relationships)
+  - [Internationalization](#internationalization)
+  - [Custom Accounts](#custom-accounts)
+  - [AccountBook — unified facade](#accountbook--unified-facade)
+  - [Notes & Storage](#notes--storage)
+  - [Export](#export)
+  - [Validation](#validation)
+- [Integrating with an Accounting App](#integrating-with-an-accounting-app)
+- [OHADA Chart Structure](#ohada-chart-structure)
+- [Environment Support](#environment-support)
+- [Contributing](#contributing)
+- [License](#license)
+
+---
+
 ## Features
 
-- **Complete OHADA Chart** — All 1000+ accounts across 9 classes
-- **O(1) Lookups** — Map-based indexes and Trie prefix search for instant retrieval
-- **Type-Safe** — Full TypeScript support with branded types and `Result<T, E>` pattern
-- **Query Builder** — Fluent API with filters, fuzzy search, and sorting
-- **i18n** — Localized account names in French, English, Portuguese, and Spanish
-- **Custom Accounts** — Overlay pattern for creating custom sub-accounts and overriding labels
-- **Pluggable Storage** — Attach notes with any storage backend (memory, localStorage, custom)
-- **Export** — JSON (flat/hierarchical) and CSV output formats
-- **Zero Dependencies** — Core SDK has no external dependencies
+| | |
+|---|---|
+| **Complete chart** | All 1 000+ official OHADA accounts across 9 classes |
+| **O(1) lookups** | Map-based indexes; Trie for fast prefix search |
+| **Fluent query builder** | Filter by class, level, parent, name, regex, or custom predicate |
+| **Fuzzy search** | Typo-tolerant name search with configurable threshold |
+| **Account tree** | Parent, children, ancestors, siblings, path — lazily computed |
+| **i18n** | French, English, Portuguese, Spanish with graceful fallback |
+| **Custom accounts** | Non-destructive overlay for sub-accounts and label overrides |
+| **Pluggable storage** | Notes on any account; memory and `localStorage` adapters included |
+| **Snapshot / restore** | Serialisable chart state for database persistence |
+| **Export** | JSON (flat or hierarchical) and CSV |
+| **Type-safe** | Branded types, `Result<T, E>` error handling, full generics |
+| **Zero dependencies** | No runtime dependencies |
+
+---
 
 ## Installation
 
 ```bash
+# npm
 npm install ohadakit
+
+# yarn
+yarn add ohadakit
+
+# pnpm
+pnpm add ohadakit
 ```
+
+---
 
 ## Quick Start
 
@@ -39,140 +85,151 @@ import { LedgerEngine } from 'ohadakit';
 
 const ledger = new LedgerEngine();
 
-// Get an account (Result type — explicit error handling)
+// Safe lookup — returns a Result<Account>
 const result = ledger.get('4111');
 if (result.ok) {
-  console.log(result.data.name);       // "Clients"
-  console.log(result.data.pathString); // "41 > 411 > 4111"
+  console.log(result.data.name);        // "Clients"
+  console.log(result.data.pathString);  // "41 > 411 > 4111"
 }
 
-// Or use convenience accessors
-const account = ledger.getOrNull('4111');  // Account | null
-const account2 = ledger.getOrThrow('411'); // Account (throws on error)
+// Convenience accessors
+const account  = ledger.getOrNull('4111');   // Account | null
+const account2 = ledger.getOrThrow('4111');  // Account  (throws on miss)
 
-// Query builder
-const expenses = ledger.query()
+// Fluent query builder
+const staffExpenses = ledger
+  .query()
   .inClass('6')
   .atLevel(3)
   .nameContains('personnel')
   .sortBy('code', 'asc')
-  .execute();
+  .execute();  // Account[]
 ```
+
+---
 
 ## Core API
 
 ### Account Access
 
 ```typescript
-ledger.get('4111')           // Result<Account> with validation
-ledger.getOrNull('4111')     // Account | null
-ledger.getOrThrow('4111')    // Account (throws on error)
+// Safe — never throws
+ledger.get('4111')        // Result<Account>
+ledger.getOrNull('4111')  // Account | null
 
-// Direct registry access
-ledger.registry.has('4111')       // boolean
-ledger.registry.getByClass('4')   // Account[]
-ledger.registry.getByLevel(3)     // Account[]
-ledger.registry.searchByPrefix('41') // Account[] (Trie-based)
+// Eager — throws AccountNotFoundError or InvalidAccountCodeFormatError
+ledger.getOrThrow('4111') // Account
+
+// Registry helpers
+ledger.registry.has('4111')             // boolean
+ledger.registry.getByClass('4')         // Account[]
+ledger.registry.getByLevel(3)           // Account[]
+ledger.registry.searchByPrefix('41')    // Account[]  (Trie-based)
 ```
 
 ### Query Builder
 
 ```typescript
-ledger.query()
-  .inClass(['4', '5'])       // Filter by class(es)
-  .atLevel([3, 4])           // Filter by level(s)
-  .withParent('41')          // Filter by parent
-  .nameContains('client')    // Search in name
-  .codeMatches(/^6[0-3]/)    // Regex pattern
-  .where(acc => acc.isLeaf)  // Custom predicate
-  .sortBy('code', 'asc')     // Sort results
-  .offset(10).limit(20)      // Pagination
-  .execute();                // Get Account[]
+ledger
+  .query()
+  .inClass(['4', '5'])        // one or more classes
+  .atLevel([3, 4])            // one or more levels
+  .withParent('41')           // direct children only
+  .nameContains('client')     // case-insensitive substring
+  .codeMatches(/^6[0-3]/)     // regex on code
+  .where(a => a.isLeaf)       // arbitrary predicate
+  .sortBy('code', 'asc')      // 'code' | 'name' | 'level'
+  .offset(0).limit(25)        // pagination
+  .execute();                 // → Account[]
 
-// Convenience methods
+// Aggregation shortcuts
 ledger.query().inClass('4').count();   // number
 ledger.query().inClass('4').first();   // Account | null
 ledger.query().inClass('4').exists();  // boolean
 
-// Fuzzy search
-ledger.query()
+// Fuzzy / typo-tolerant search
+ledger
+  .query()
   .search('cliens', { fuzzy: true, threshold: 0.6 })
   .execute();
 ```
 
 ### Account Relationships
 
+Relationship properties are lazily computed and cached on first access.
+
 ```typescript
 const account = ledger.getOrThrow('4111');
 
 account.parent      // Account | null
 account.children    // Account[]
-account.ancestors   // Account[] (nearest parent first)
+account.ancestors   // Account[]  (nearest-first)
 account.siblings    // Account[]
-account.path        // Account[] (root to self)
+account.path        // Account[]  (root → self)
 account.pathString  // "41 > 411 > 4111"
 account.isLeaf      // boolean
 account.isRoot      // boolean
-account.depth       // number
+account.depth       // number (1-based)
 
-account.isDescendantOf('4')     // true
-account.isAncestorOf('41111')   // true (if exists)
-account.getDescendants()        // Account[]
-account.getDescendantsAtLevel(2) // grandchildren only
+account.isDescendantOf('4')      // true
+account.isAncestorOf('41111')    // true (if account exists)
+account.getDescendants()         // Account[]  (all levels)
+account.getDescendantsAtLevel(4) // Account[]  (specific level only)
 ```
 
-### Internationalization (i18n)
+### Internationalization
 
-Supports 4 OHADA locales: French (fr), English (en), Portuguese (pt), Spanish (es).
+Supports four OHADA locales. Names fall back to French when a translation is missing.
 
 ```typescript
-// Set locale at creation
 const ledger = new LedgerEngine({ locale: 'en' });
 
-// Or change later
-ledger.setLocale('en');
-ledger.getLocale();              // 'en'
-ledger.getAvailableLocales();    // ['fr', 'en', 'pt', 'es']
+ledger.setLocale('pt');
+ledger.getLocale();             // 'pt'
+ledger.getAvailableLocales();   // ['fr', 'en', 'pt', 'es']
 
-// Get localized account name (falls back to French if translation missing)
-ledger.getLocalizedName('4111'); // English name or French fallback
+// Localised name with automatic fallback
+ledger.getLocalizedName('4111');  // English name, or French if not translated
 
-// Direct TranslationService access
+// Low-level TranslationService
 ledger.i18n.getAccountName('10', 'Capital');
 ledger.i18n.hasTranslation('10');
 ```
 
 ### Custom Accounts
 
-Extend the immutable OHADA chart with custom sub-accounts and label overrides.
+Extend the immutable OHADA tree without modifying it. Custom accounts and label overrides live in an isolated overlay.
+
+**Rules**
+- 2-character main accounts (`10`, `11`, …) cannot be created or renamed.
+- Custom accounts must be ≥ 3 characters and start with their parent's code.
+- Any 3+-character account (official or custom) can have its label overridden.
 
 ```typescript
 import { CustomAccountManager, MemoryStorage } from 'ohadakit';
 
-const manager = new CustomAccountManager({
-  storage: new MemoryStorage()
-});
+const manager = new CustomAccountManager({ storage: new MemoryStorage() });
 await manager.initialize();
 
-// Create a custom sub-account (3+ characters, must start with parent code)
-const result = await manager.createAccount({
+// Create a custom sub-account
+await manager.createAccount({
   code: '411-VIP',
   name: 'Clients VIP',
-  parentCode: '411'
+  parentCode: '411',
 });
 
-// Override label of an existing account
-await manager.updateLabel('4111', 'Clients - Particuliers');
+// Override an official account label
+await manager.updateLabel('4111', 'Clients — Particuliers');
 
-// Query custom + official accounts together
-manager.getByCode('411-VIP');   // Account
-manager.getAll();               // All official + custom accounts
-manager.getCustomAccounts();    // Only custom accounts
+// Query the merged chart
+manager.getByCode('411-VIP');    // Account
+manager.getAll();                // official + custom
+manager.getCustomAccounts();     // custom only
 ```
 
-### AccountBook (Unified Facade)
+### AccountBook — unified facade
 
-`AccountBook` wraps all OhadaKit features into a single entry point: official accounts, custom accounts, label overrides, notes, i18n, and export — with snapshot/restore for state management.
+`AccountBook` combines every OhadaKit feature behind a single async-initialised object. Start here for any real application.
 
 ```typescript
 import { AccountBook, MemoryStorage } from 'ohadakit';
@@ -180,83 +237,82 @@ import { AccountBook, MemoryStorage } from 'ohadakit';
 const book = new AccountBook({ storage: new MemoryStorage() });
 await book.initialize();
 
-// Access any account (official + custom, with label overrides applied)
+// Lookup (official + custom, overrides applied)
 const account = book.getAccountOrNull('411');
 
-// Create custom sub-accounts
+// Mutate
 await book.createAccount({ code: '411-VIP', name: 'Clients VIP', parentCode: '411' });
+await book.updateLabel('4111', 'Clients — Particuliers');
+await book.setNote('411-VIP', 'High-value clients segment');
 
-// Override labels
-await book.updateLabel('4111', 'Clients - Particuliers');
-
-// Notes work on both official and custom accounts
-await book.setNote('411-VIP', 'High-value clients');
-
-// Export merged data (official + custom + overrides)
+// Export the merged chart
 const json = book.exportToJSON({ pretty: true });
-const csv = book.exportToCSV();
+const csv  = book.exportToCSV();
 
 // i18n
 book.setLocale('en');
-book.getLocalizedName('10'); // English name
+book.getLocalizedName('10');
 
-// Stats
+// Aggregate stats
 const stats = await book.getStats();
-// { total, byClass, byLevel, customAccountCount, labelOverrideCount, noteCount }
+// → { total, byClass, byLevel, customAccountCount, labelOverrideCount, noteCount }
 ```
 
-#### Snapshot / Restore
+#### Snapshot & restore
 
-Capture and restore the entire book state (custom accounts, label overrides, notes) as a plain JSON object:
+Persist the complete chart state — custom accounts, overrides, and notes — as a plain JSON object that can be stored anywhere.
 
 ```typescript
-// Take a snapshot
+// Capture
 const snapshot = await book.snapshot();
 // { version, timestamp, locale, customAccounts, labelOverrides, notes }
 
-// Store it anywhere (database, file, API)
-const json = JSON.stringify(snapshot);
+await db.put('chart-state', JSON.stringify(snapshot));
 
-// Restore into a fresh or existing book
-const result = await book.restore(JSON.parse(json));
+// Restore into a fresh book
+const result = await book.restore(JSON.parse(savedJson));
 if (!result.ok) {
   console.error('Restore failed:', result.error.message);
 }
 ```
 
-#### When to use AccountBook vs LedgerEngine
+#### `AccountBook` vs `LedgerEngine`
 
-| Use case | Recommendation |
-|----------|---------------|
-| Quick lookups on official accounts only | `LedgerEngine` |
-| Custom accounts + label overrides + notes | `AccountBook` |
-| App needs snapshot/restore of chart state | `AccountBook` |
-| Prototype without persistence wiring | `LedgerEngine` |
+| Need | Use |
+|------|-----|
+| Quick lookups on the official chart | `LedgerEngine` |
+| Custom accounts, label overrides, notes | `AccountBook` |
+| Snapshot / restore of chart state | `AccountBook` |
+| Minimal setup with no persistence wiring | `LedgerEngine` |
 
-### Notes Storage
+### Notes & Storage
+
+Attach free-text notes to any account code. The storage backend is swappable.
 
 ```typescript
 import { LedgerEngine, LocalStorageAdapter } from 'ohadakit';
 
-// In-memory (default)
+// Default: in-memory (no persistence)
 const ledger = new LedgerEngine();
 
-// Browser localStorage
+// Browser: localStorage with a namespaced prefix
 const ledger = new LedgerEngine({
-  storage: new LocalStorageAdapter('myapp:')
+  storage: new LocalStorageAdapter('myapp:'),
 });
 
 await ledger.setNote('5121', 'Mobile Money Orange');
 await ledger.getNote('5121');    // 'Mobile Money Orange'
+await ledger.hasNote('5121');    // true
 await ledger.deleteNote('5121');
-await ledger.hasNote('5121');    // false
 await ledger.getAllNotes();      // Map<string, string>
 ```
+
+**Custom adapter** — implement the `StorageAdapter` interface to integrate any backend (Redis, IndexedDB, a REST API, etc.).
 
 ### Export
 
 ```typescript
-// JSON (flat or hierarchical)
+// JSON
 ledger.exportToJSON({ structure: 'flat', pretty: true });
 ledger.exportToJSON({ structure: 'hierarchical' });
 
@@ -264,9 +320,9 @@ ledger.exportToJSON({ structure: 'hierarchical' });
 ledger.exportToCSV({ columns: ['code', 'name', 'level'] });
 ledger.exportToCSV({ delimiter: ';', includeHeader: true });
 
-// Export specific class
+// Scoped to a single class
 ledger.exportClass('4', 'json', { structure: 'flat' });
-ledger.exportClass('4', 'csv', { columns: ['code', 'name'] });
+ledger.exportClass('4', 'csv',  { columns: ['code', 'name'] });
 ```
 
 ### Validation
@@ -274,10 +330,10 @@ ledger.exportClass('4', 'csv', { columns: ['code', 'name'] });
 ```typescript
 import { validateAccountCodeFormat, AccountNotFoundError } from 'ohadakit';
 
-// Format validation (no registry lookup)
-const formatResult = validateAccountCodeFormat('4111'); // Result<string>
+// Format check (no registry lookup required)
+const fmt = validateAccountCodeFormat('4111');  // Result<string>
 
-// Full validation with Result type
+// Typed error handling via Result
 const result = ledger.get('9999');
 if (!result.ok && result.error instanceof AccountNotFoundError) {
   console.error(result.error.message);
@@ -285,101 +341,137 @@ if (!result.ok && result.error instanceof AccountNotFoundError) {
 
 // Batch validation
 const { valid, invalid } = ledger.validateBatch(['4111', '5121', '9999']);
-// valid: [{ code: '4111', account }, { code: '5121', account }]
-// invalid: [{ code: '9999', error }]
+// valid   → [{ code, account }, …]
+// invalid → [{ code, error }, …]
 ```
 
-## Using OhadaKit in an Accounting App
+---
 
-OhadaKit manages the **chart of accounts** — it does not own journal entries, balances, or transactions. Your app links to OhadaKit via account codes used as foreign keys.
+## Integrating with an Accounting App
+
+OhadaKit manages the **chart of accounts** only. Journal entries, balances, and financial statements are your application's responsibility — they link to OhadaKit via account codes used as foreign keys.
 
 ```
-┌──────────────────────────┐     ┌──────────────────────────┐
-│       Your App           │     │       OhadaKit           │
-│                          │     │                          │
-│  Journal Entries ────────┼─FK──▶  AccountBook             │
-│  Balances ───────────────┼─FK──▶    ├─ Official Accounts  │
-│  Trial Balance ──────────┼─FK──▶    ├─ Custom Accounts    │
-│  Financial Statements    │     │    ├─ Label Overrides    │
-│                          │     │    ├─ Notes              │
-│  Your DB / API           │     │    └─ i18n + Export      │
-└──────────────────────────┘     └──────────────────────────┘
+┌────────────────────────┐       ┌────────────────────────┐
+│      Your App          │       │      OhadaKit          │
+│                        │       │                        │
+│  Journal entries  ─────┼─ FK ──▶  AccountBook           │
+│  Balances         ─────┼─ FK ──▶    ├─ Official chart   │
+│  Trial balance    ─────┼─ FK ──▶    ├─ Custom accounts  │
+│  Financial stmts       │       │    ├─ Label overrides  │
+│                        │       │    ├─ Notes            │
+│  Your DB / API         │       │    └─ i18n + Export    │
+└────────────────────────┘       └────────────────────────┘
 ```
-
-### Step-by-step Integration
 
 ```typescript
 import { AccountBook, MemoryStorage } from 'ohadakit';
 
-// 1. Initialize the book
 const book = new AccountBook({ storage: new MemoryStorage() });
 await book.initialize();
 
-// 2. Validate account codes when creating journal entries
-function addJournalEntry(debitCode: string, creditCode: string, amount: number) {
-  if (!book.has(debitCode)) throw new Error(`Unknown account: ${debitCode}`);
+// Validate codes before persisting journal entries
+function createEntry(debitCode: string, creditCode: string, amount: number) {
+  if (!book.has(debitCode))  throw new Error(`Unknown account: ${debitCode}`);
   if (!book.has(creditCode)) throw new Error(`Unknown account: ${creditCode}`);
-
-  // Store in your database with account codes as FKs
   return { debitCode, creditCode, amount, date: new Date() };
 }
 
-// 3. Resolve names for display
-function getAccountName(code: string): string {
+// Resolve display names
+function accountLabel(code: string): string {
   return book.getAccountOrNull(code)?.name ?? `Unknown (${code})`;
 }
 
-// 4. Save/restore chart state alongside your app data
-async function saveAppState(db: any) {
+// Persist chart state alongside your application data
+async function saveState(db: Database) {
   const snapshot = await book.snapshot();
-  await db.put('chart-state', JSON.stringify(snapshot));
+  await db.put('ohadakit:chart-state', JSON.stringify(snapshot));
 }
 ```
 
-### What OhadaKit Owns vs What Your App Owns
+### Responsibility boundary
 
 | Concern | Owner |
 |---------|-------|
-| Chart of accounts (official 1000+ accounts) | OhadaKit |
-| Custom sub-accounts & label overrides | OhadaKit (via AccountBook) |
-| Notes attached to accounts | OhadaKit (via AccountBook) |
-| Account name translations (fr/en/pt/es) | OhadaKit |
-| Journal entries, postings | Your app |
-| Account balances, trial balance | Your app |
+| Official chart of accounts (1 000+ entries) | OhadaKit |
+| Custom sub-accounts & label overrides | OhadaKit — `AccountBook` |
+| Account notes | OhadaKit — `AccountBook` |
+| Name translations (fr / en / pt / es) | OhadaKit |
+| Journal entries & postings | Your app |
+| Account balances & trial balance | Your app |
 | Financial statements | Your app |
-| User authentication, permissions | Your app |
+| Authentication & authorisation | Your app |
 
-## OHADA Structure
+---
+
+## OHADA Chart Structure
+
+The SYSCOHADA plan organises accounts into a 4-level decimal hierarchy.
 
 ```
-Level 1: Class (1-9)
-  └─ Level 2: Main account (10, 11...)
-      └─ Level 3: Sub-account (101, 102...)
-          └─ Level 4: Detail account (1011, 1012...)
+Class  (1 digit)   → e.g. 4
+  Main account     → e.g. 41
+    Sub-account    → e.g. 411
+      Detail       → e.g. 4111
 ```
 
-| Class | Description |
-|-------|-------------|
-| 1 | Comptes de ressources durables |
-| 2 | Comptes d'actif immobilise |
-| 3 | Comptes de stocks |
-| 4 | Comptes de tiers |
-| 5 | Comptes de tresorerie |
-| 6 | Comptes de charges des activites ordinaires |
-| 7 | Comptes de produits des activites ordinaires |
-| 8 | Comptes des autres charges et autres produits |
-| 9 | Comptes des engagements hors bilan |
+| Class | Label |
+|-------|-------|
+| 1 | Ressources durables |
+| 2 | Actif immobilisé |
+| 3 | Stocks |
+| 4 | Tiers |
+| 5 | Trésorerie |
+| 6 | Charges des activités ordinaires |
+| 7 | Produits des activités ordinaires |
+| 8 | Autres charges et autres produits |
+| 9 | Engagements hors bilan |
+
+---
+
+## Environment Support
+
+| Environment | Support |
+|-------------|---------|
+| Node.js ≥ 16 | ✅ ESM + CJS |
+| Modern browsers | ✅ UMD + IIFE bundles via `ohadakit/browser` |
+| TypeScript | ✅ Full type declarations included |
+| Bun / Deno | ✅ ESM entry point |
+
+---
+
+## Contributing
+
+Contributions are welcome. Please open an issue first to discuss significant changes.
+
+```bash
+# Clone and install
+git clone https://github.com/Dahkenangnon/ohadakit.git
+cd ohadakit
+npm install
+
+# Run tests
+npm test
+
+# Type-check
+npm run type-check
+
+# Build
+npm run build
+```
+
+All pull requests must pass `npm run typecheck && npm test` before review.
+
+---
 
 ## License
 
-MIT © [@Dahkenangnon](https://github.com/Dahkenangnon)
+MIT © [Justin Dah-kenangnon](https://github.com/Dahkenangnon)
 
 ---
 
 <div align="center">
 
-**[GitHub](https://github.com/Dahkenangnon/ohadakit)** · **[Issues](https://github.com/Dahkenangnon/ohadakit/issues)** · **[npm](https://www.npmjs.com/package/ohadakit)**
-
-Questions or feedback? Reach out at **dah.kenangnon@gmail.com**
+[GitHub](https://github.com/Dahkenangnon/ohadakit) · [npm](https://www.npmjs.com/package/ohadakit) · [Issues](https://github.com/Dahkenangnon/ohadakit/issues) · [dah.kenangnon@gmail.com](mailto:dah.kenangnon@gmail.com)
 
 </div>
