@@ -13,7 +13,7 @@
 [data-theme="light"] {
   --bg:          #fbfbf9;
   --bg-grad:     radial-gradient(ellipse 1100px 500px at 50% -100px,
-                   rgba(14, 63, 168, 0.07), transparent 70%);
+                   rgba(16, 185, 129, 0.08), transparent 70%);
   --surface:     #ffffff;
   --surface-2:   #f5f5f3;
   --line:        #e7e7e4;
@@ -22,14 +22,14 @@
   --ink-mid:     #404040;
   --ink-soft:    #6b6b68;
   --ink-faint:   #a3a3a0;
-  --accent:      #0e3fa8;
-  --accent-2:    #1146b8;
-  --accent-bg:   #eff4ff;
-  --accent-line: #c3d4f5;
+  --accent:      #047857;
+  --accent-2:    #10b981;
+  --accent-bg:   #ecfdf5;
+  --accent-line: #a7f3d0;
   --code-bg:     #f8f8f6;
   --code-border: #ececea;
   --code-ink:    #1f2937;
-  --kw:          #0e3fa8;
+  --kw:          #047857;
   --str:         #b45309;
   --num:         #4338ca;
   --com:         #9ca3af;
@@ -49,14 +49,14 @@
   --ink-mid:     #d4d4d4;
   --ink-soft:    #a1a1a1;
   --ink-faint:   #737373;
-  --accent:      #6eaaff;
-  --accent-2:    #93beff;
-  --accent-bg:   #0d1f40;
-  --accent-line: #1e3a6e;
+  --accent:      #34d399;
+  --accent-2:    #10b981;
+  --accent-bg:   #052e21;
+  --accent-line: #064e3b;
   --code-bg:     #0e0f11;
   --code-border: #1f2024;
   --code-ink:    #e5e7eb;
-  --kw:          #6eaaff;
+  --kw:          #4ade80;
   --str:         #fbbf24;
   --num:         #818cf8;
   --com:         #6b7280;
@@ -66,9 +66,10 @@
 
 /* ─── Base ──────────────────────────────────────────────────── */
 *, *::before, *::after { box-sizing: border-box; }
-html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
+html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; height: 100%; }
 body {
   margin: 0;
+  height: 100%;
   background: var(--bg);
   color: var(--ink);
   font-family: var(--font-sans);
@@ -86,6 +87,7 @@ body::before {
   pointer-events: none;
   z-index: -1;
 }
+#root { height: 100%; }
 a { color: inherit; text-decoration: none; transition: color 0.15s, opacity 0.15s; }
 a:hover { color: var(--accent); }
 a:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 3px; }
@@ -105,10 +107,39 @@ pre code { background: transparent; border: none; padding: 0; color: inherit; }
 /* ─── Layout ────────────────────────────────────────────────── */
 .ds-wrap { max-width: 960px; margin: 0 auto; padding: 0 24px; }
 
+/*
+  Root shell: fills the viewport exactly. The topbar and body stacked
+  vertically. Nothing on .ds-shell itself scrolls — children own scrolling.
+*/
+.ds-shell {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* Home page body: single scrolling column */
+.ds-body-home {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+}
+
+/*
+  Demo page body: sidebar + main sit side by side.
+  overflow: hidden here is what constrains both children to the
+  remaining viewport height so they each scroll independently.
+*/
+.ds-body-demo {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  overflow: hidden;
+}
+
 /* ─── Topbar ────────────────────────────────────────────────── */
 .ds-topbar {
-  position: sticky;
-  top: 0;
+  flex-shrink: 0;
   z-index: 50;
   backdrop-filter: saturate(180%) blur(12px);
   -webkit-backdrop-filter: saturate(180%) blur(12px);
@@ -140,7 +171,7 @@ pre code { background: transparent; border: none; padding: 0; color: inherit; }
   border-radius: 7px;
   overflow: hidden;
   flex-shrink: 0;
-  background: linear-gradient(135deg, #0e3fa8, #1146b8);
+  background: linear-gradient(135deg, #047857, #10b981);
 }
 .ds-nav { display: flex; gap: 4px; align-items: center; }
 .ds-nav-link {
@@ -173,6 +204,11 @@ pre code { background: transparent; border: none; padding: 0; color: inherit; }
 [data-theme="dark"] .ds-icon-moon { display: none; }
 
 /* ─── Demo sidebar ──────────────────────────────────────────── */
+/*
+  The sidebar fills exactly the height given by .ds-body-demo
+  (100vh minus topbar) and scrolls only its own content.
+  No position:sticky or height:calc needed — the flex parent handles it.
+*/
 .ds-sidebar {
   width: 212px;
   flex-shrink: 0;
@@ -180,9 +216,14 @@ pre code { background: transparent; border: none; padding: 0; color: inherit; }
   background: var(--surface);
   padding: 16px 0;
   overflow-y: auto;
-  position: sticky;
-  top: 56px;
-  height: calc(100vh - 56px);
+}
+
+/* Main content area for demo pages */
+.ds-main {
+  flex: 1;
+  min-width: 0;
+  overflow-y: auto;
+  padding: 32px 36px;
 }
 .ds-sidebar-section {
   font-size: 11px;
@@ -277,7 +318,7 @@ pre code { background: transparent; border: none; padding: 0; color: inherit; }
 }
 .ds-btn:active { transform: translateY(1px); }
 .ds-btn-primary {
-  background: linear-gradient(180deg, var(--accent-2), var(--accent));
+  background: linear-gradient(180deg, #10b981, #047857);
   color: white;
   box-shadow: var(--shadow-sm), inset 0 1px 0 rgba(255,255,255,0.18);
 }
@@ -453,26 +494,183 @@ a.ds-feat-card:hover .ds-feat-card-title svg { color: var(--accent); }
 .ds-page-title { font-size: 22px; font-weight: 600; color: var(--ink); margin-bottom: 6px; }
 .ds-page-sub { font-size: 15px; color: var(--ink-mid); margin-bottom: 24px; }
 
-/* ─── Map Tailwind grays to design tokens (all demo pages) ──── */
-.bg-gray-50  { background-color: var(--bg) !important; }
-.bg-gray-100 { background-color: var(--surface-2) !important; }
-.bg-white    { background-color: var(--surface) !important; }
-.bg-gray-900 { background-color: var(--code-bg) !important; }
-.border-gray-200, .border-gray-100 { border-color: var(--line) !important; }
-.border-gray-300 { border-color: var(--line-strong) !important; }
+/* ─── Map Tailwind grays → design tokens (all demo pages) ───── */
+/* Backgrounds */
+.bg-gray-50                    { background-color: var(--bg) !important; }
+.bg-gray-100                   { background-color: var(--surface-2) !important; }
+.bg-white                      { background-color: var(--surface) !important; }
+.bg-gray-900                   { background-color: var(--code-bg) !important; }
+
+/* Borders */
+.border-gray-100               { border-color: var(--line) !important; }
+.border-gray-200               { border-color: var(--line) !important; }
+.border-gray-300               { border-color: var(--line-strong) !important; }
+.divide-gray-100 > * + *       { border-color: var(--line) !important; }
+.divide-gray-200 > * + *       { border-color: var(--line) !important; }
+.border-t-2                    { border-top-color: var(--line-strong) !important; }
+
+/* Text */
 .text-gray-900, .text-gray-800 { color: var(--ink) !important; }
 .text-gray-700, .text-gray-600 { color: var(--ink-mid) !important; }
 .text-gray-500, .text-gray-400 { color: var(--ink-soft) !important; }
 .text-gray-300, .text-gray-100 { color: var(--ink-faint) !important; }
-.text-blue-600, .text-blue-700 { color: var(--accent) !important; }
-.text-blue-800 { color: var(--accent) !important; }
-.bg-blue-50, .bg-blue-100 { background-color: var(--accent-bg) !important; }
-.border-blue-300, .border-blue-200 { border-color: var(--accent-line) !important; }
 
-/* ─── Mobile ────────────────────────────────────────────────── */
-@media (max-width: 640px) {
-  .ds-hero { padding: 48px 0 36px; }
-  .ds-section { padding: 40px 0; }
-  .ds-nav-links { display: none; }
-  .ds-sidebar { display: none; }
+/* Accent / blue (primary action) */
+.text-blue-600, .text-blue-700, .text-blue-800  { color: var(--accent) !important; }
+.bg-blue-600                   { background-color: var(--accent) !important; }
+.bg-blue-50, .bg-blue-100      { background-color: var(--accent-bg) !important; }
+.border-blue-200, .border-blue-300 { border-color: var(--accent-line) !important; }
+.hover\:bg-blue-700:hover      { background-color: var(--accent-2) !important; }
+.focus\:border-blue-500:focus  { border-color: var(--accent) !important; }
+.focus\:ring-blue-500          { --tw-ring-color: var(--accent) !important; }
+
+/* Green (success states) */
+.text-green-600, .text-green-700 { color: var(--accent) !important; }
+.bg-green-50, .bg-green-100    { background-color: var(--accent-bg) !important; }
+.border-green-200, .border-green-300 { border-color: var(--accent-line) !important; }
+
+/* Red (error states) — use dedicated error tokens */
+.bg-red-50                     { background-color: var(--error-bg) !important; }
+.border-red-200                { border-color: var(--error-line) !important; }
+.text-red-700, .text-red-600   { color: var(--error-ink) !important; }
+
+/* Amber (warning states) */
+.text-amber-500                { color: var(--warn-ink) !important; }
+
+/* ─── Error / warning tokens ────────────────────────────────── */
+[data-theme="light"] {
+  --error-bg:   #fff1f2;
+  --error-line: #fecdd3;
+  --error-ink:  #b91c1c;
+  --warn-ink:   #b45309;
 }
+[data-theme="dark"] {
+  --error-bg:   #1c0d0e;
+  --error-line: #450a0a;
+  --error-ink:  #f87171;
+  --warn-ink:   #fbbf24;
+}
+
+/* ─── Native input / select / textarea theming ───────────────── */
+/*
+  All demo pages use Tailwind-only input styling. Override at the element
+  level so every <input>, <select>, <textarea> in the app inherits tokens
+  without touching page files.
+*/
+input:not([type="checkbox"]):not([type="radio"]):not([type="range"]),
+select,
+textarea {
+  background-color: var(--surface) !important;
+  color: var(--ink) !important;
+  border-color: var(--line-strong) !important;
+}
+input:not([type="checkbox"]):not([type="radio"]):not([type="range"])::placeholder,
+textarea::placeholder {
+  color: var(--ink-faint) !important;
+}
+input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):focus,
+select:focus,
+textarea:focus {
+  border-color: var(--accent) !important;
+  outline: none;
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 20%, transparent) !important;
+}
+select option { background: var(--surface); color: var(--ink); }
+
+/* ─── Topbar left group (brand + hamburger) ─────────────────── */
+.ds-topbar-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Hamburger button — hidden on desktop, shown on mobile */
+.ds-menu-btn {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  color: var(--ink-soft);
+  border: 1px solid var(--line);
+  background: var(--surface);
+  transition: background 0.15s, color 0.15s;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+.ds-menu-btn:hover { color: var(--ink); background: var(--surface-2); }
+
+/* ─── Mobile ─────────────────────────────────────────────────── */
+@media (max-width: 768px) {
+  /* Show hamburger button */
+  .ds-menu-btn { display: inline-flex; }
+
+  /* Hide secondary nav links (GitHub, npm) — keep Home, Demos, theme toggle */
+  .ds-nav .ds-nav-link:not(.ds-nav-keep) { display: none; }
+  .ds-nav .ds-nav-divider               { display: none; }
+
+  /* Demo body: keep row layout — sidebar is overlaid, not in flow */
+  .ds-body-demo { position: relative; }
+
+  /* Backdrop overlay */
+  .ds-sidebar-backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: 40;
+    background: rgba(0, 0, 0, 0.45);
+    backdrop-filter: blur(2px);
+    -webkit-backdrop-filter: blur(2px);
+  }
+
+  /* Sidebar: off-screen by default, slides in when .ds-sidebar-open */
+  .ds-sidebar {
+    position: fixed;
+    top: 56px;          /* below topbar */
+    left: 0;
+    bottom: 0;
+    z-index: 41;
+    width: 240px;
+    transform: translateX(-100%);
+    transition: transform 0.22s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: none;
+  }
+  .ds-sidebar.ds-sidebar-open {
+    transform: translateX(0);
+    box-shadow: 4px 0 24px rgba(0, 0, 0, 0.18);
+  }
+
+  /* Main takes full width since sidebar is overlaid */
+  .ds-main { padding: 20px 16px; }
+
+  /* Hero */
+  .ds-hero { padding: 40px 0 28px; }
+  .ds-section { padding: 36px 0; }
+  .ds-hero-title { font-size: clamp(28px, 8vw, 44px); }
+  .ds-cta-row { flex-direction: column; align-items: flex-start; }
+
+  /* Code grid: single column */
+  .ds-code-grid { grid-template-columns: 1fr !important; }
+  .ds-code-grid .ds-code-card.span2 { grid-column: span 1 !important; }
+
+  /* Stats: 2 columns */
+  .ds-stats-grid { grid-template-columns: repeat(2, 1fr) !important; }
+
+  /* Feature grid: single column */
+  .ds-feat-grid { grid-template-columns: 1fr !important; }
+
+  /* Tables: horizontal scroll */
+  table { display: block; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+
+  /* Demo page inner max-widths: remove restriction */
+  .max-w-4xl, .max-w-3xl, .max-w-2xl { max-width: 100% !important; }
+}
+
+@media (max-width: 480px) {
+  .ds-wrap { padding: 0 16px; }
+  .ds-main { padding: 16px 12px; }
+  .ds-stats-grid { grid-template-columns: 1fr 1fr !important; }
+  .ds-stat-card dd { font-size: 18px; }
+  .ds-btn { padding: 9px 14px; font-size: 13px; }
+}
+
