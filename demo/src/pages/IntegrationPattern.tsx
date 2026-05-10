@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { AccountBook, MemoryStorage } from 'ohadakit';
+import CodeBlock from '../CodeBlock';
 
 const book = new AccountBook({ storage: new MemoryStorage() });
 
@@ -286,8 +287,7 @@ export default function IntegrationPattern() {
           keys. OhadaKit resolves codes to names, validates existence, and
           provides hierarchy info.
         </p>
-        <pre className="text-xs text-gray-600 overflow-x-auto">
-          <code>{`// Validate before saving
+        <CodeBlock code={`// Validate before saving
 if (!book.has(debitCode)) throw new Error('Unknown account');
 
 // Resolve names for display
@@ -295,8 +295,7 @@ const name = book.getAccountOrNull(code)?.name;
 
 // Save/restore chart state alongside your app data
 const snapshot = await book.snapshot();
-await db.put('chart-state', JSON.stringify(snapshot));`}</code>
-        </pre>
+await db.put('chart-state', JSON.stringify(snapshot));`} />
       </div>
     </div>
   );

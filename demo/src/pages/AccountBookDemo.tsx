@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { AccountBook, MemoryStorage } from 'ohadakit';
+import CodeBlock from '../CodeBlock';
 import type { Account, AccountBookSnapshot, AccountBookStats } from 'ohadakit';
 
 const book = new AccountBook({ storage: new MemoryStorage() });
@@ -377,8 +378,7 @@ export default function AccountBookDemo() {
       {/* Code Example */}
       <div className="mt-8 bg-gray-50 rounded-lg border border-gray-200 p-4">
         <h3 className="text-sm font-medium text-gray-700 mb-2">Code Example</h3>
-        <pre className="text-xs text-gray-600 overflow-x-auto">
-          <code>{`import { AccountBook, MemoryStorage } from 'ohadakit';
+        <CodeBlock code={`import { AccountBook, MemoryStorage } from 'ohadakit';
 
 const book = new AccountBook({ storage: new MemoryStorage() });
 await book.initialize();
@@ -393,8 +393,7 @@ await book.setNote('411-VIP', 'High-value clients');
 
 // Snapshot / restore
 const snap = await book.snapshot();
-await book.restore(snap);`}</code>
-        </pre>
+await book.restore(snap);`} />
       </div>
     </div>
   );

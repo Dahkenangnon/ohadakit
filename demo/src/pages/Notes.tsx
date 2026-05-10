@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { ledger } from '../lib/sdk';
+import CodeBlock from '../CodeBlock';
 
 interface NoteEntry {
   code: string;
@@ -149,8 +150,7 @@ export default function Notes() {
 
       <div className="mt-6 bg-gray-50 rounded-lg border border-gray-200 p-4">
         <h3 className="text-sm font-medium text-gray-700 mb-2">Code Example</h3>
-        <pre className="text-xs text-gray-600 overflow-x-auto">
-          <code>{`import { LedgerEngine, MemoryStorage, LocalStorageAdapter } from 'ohadakit';
+        <CodeBlock code={`import { LedgerEngine, MemoryStorage, LocalStorageAdapter } from 'ohadakit';
 
 // In-memory storage (default)
 const ledger = new LedgerEngine();
@@ -163,8 +163,7 @@ const ledger = new LedgerEngine({
 await ledger.setNote('5121', 'Mobile Money Orange');
 await ledger.getNote('5121');    // 'Mobile Money Orange'
 await ledger.deleteNote('5121');
-await ledger.getAllNotes();      // Map<string, string>`}</code>
-        </pre>
+await ledger.getAllNotes();      // Map<string, string>`} />
       </div>
     </div>
   );
