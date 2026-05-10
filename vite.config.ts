@@ -31,7 +31,7 @@ export default defineConfig(() => {
             preserveModules: false,
             exports: 'named',
             banner:
-              '/*! OhadaKit SDK | MIT License | https://github.com/Dahkenangnon/ohadakit */',
+              '/*! OhadaKit SDK | Apache-2.0 License | https://github.com/Dahkenangnon/ohadakit */',
           },
           {
             format: 'cjs',
@@ -40,7 +40,7 @@ export default defineConfig(() => {
             preserveModules: false,
             exports: 'named',
             banner:
-              '/*! OhadaKit SDK | MIT License | https://github.com/Dahkenangnon/ohadakit */',
+              '/*! OhadaKit SDK | Apache-2.0 License | https://github.com/Dahkenangnon/ohadakit */',
           },
         ],
       },

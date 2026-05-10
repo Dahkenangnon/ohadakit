@@ -10,7 +10,7 @@ O(1) lookups · fluent query builder · custom accounts · i18n · export · zer
 
 [![npm version](https://img.shields.io/npm/v/ohadakit.svg?style=flat-square)](https://www.npmjs.com/package/ohadakit)
 [![npm downloads](https://img.shields.io/npm/dm/ohadakit.svg?style=flat-square)](https://www.npmjs.com/package/ohadakit)
-[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg?style=flat-square)](https://opensource.org/licenses/MIT)
+[![License: Apache-2.0](https://img.shields.io/badge/License-Apache%202.0-blue.svg?style=flat-square)](https://opensource.org/licenses/Apache-2.0)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.0+-3178c6.svg?style=flat-square)](https://www.typescriptlang.org/)
 [![Node.js](https://img.shields.io/badge/Node.js-%3E%3D16-339933.svg?style=flat-square)](https://nodejs.org/)
 
@@ -488,7 +488,7 @@ All pull requests must pass `npm run typecheck && npm test` before review.
 
 ## License
 
-MIT © [Justin Dah-kenangnon](https://github.com/Dahkenangnon)
+Apache-2.0 © [Justin Dah-kenangnon](https://github.com/Dahkenangnon)
 
 ---
 

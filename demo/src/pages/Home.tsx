@@ -228,7 +228,7 @@ ledger.setLocale(`}<span className="str">'en'</span>{`);
           </p>
           <p>
             <a href="https://github.com/Dahkenangnon/ohadakit/blob/main/LICENSE"
-               target="_blank" rel="noopener noreferrer">MIT</a>
+               target="_blank" rel="noopener noreferrer">Apache-2.0</a>
             {' '}&middot;{' '}
             <a href="https://github.com/Dahkenangnon/ohadakit"
                target="_blank" rel="noopener noreferrer">GitHub</a>
