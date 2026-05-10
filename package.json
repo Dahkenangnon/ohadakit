@@ -40,6 +40,7 @@
     "test": "vitest run",
     "test:watch": "vitest --watch",
     "test:coverage": "vitest run --coverage",
+    "render-assets": "bash tools/render-assets.sh",
     "typecheck": "tsc --noEmit",
     "prepublishOnly": "npm run typecheck && npm run test && npm run build"
   },
@@ -61,7 +62,7 @@
   "bugs": {
     "url": "https://github.com/Dahkenangnon/ohadakit/issues"
   },
-  "homepage": "https://github.com/Dahkenangnon/ohadakit#readme",
+  "homepage": "https://ohadakit.claviscore.com/",
   "devDependencies": {
     "@types/node": "^20.0.0",
     "@vitest/coverage-v8": "^1.0.0",

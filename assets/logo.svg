@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" role="img"
+    aria-label="OhadaKit logo mark">
+  <title>OhadaKit</title>
+
+  <defs>
+    <linearGradient id="logo-bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%"  stop-color="#0a358a"/>
+      <stop offset="60%" stop-color="#0e3fa8"/>
+      <stop offset="100%" stop-color="#1146b8"/>
+    </linearGradient>
+    <radialGradient id="logo-halo" cx="0" cy="0" r="220" gradientUnits="userSpaceOnUse">
+      <stop offset="0%"  stop-color="#5b8cff" stop-opacity="0.22"/>
+      <stop offset="65%" stop-color="#5b8cff" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <!-- Rounded square base -->
+  <rect width="256" height="256" rx="56" fill="url(#logo-bg)"/>
+  <rect width="256" height="256" rx="56" fill="url(#logo-halo)"/>
+
+  <!-- Ledger / chart-of-accounts icon:
+       Three account rows (class lines) with an indent tree showing
+       the OHADA hierarchy: Class → Group → Account -->
+
+  <!-- Row 1 — Class level (emerald, widest) -->
+  <rect x="44"  y="76"  width="110" height="14" rx="4" fill="#34d399"/>
+  <!-- Vertical connector for children -->
+  <line x1="52" y1="90" x2="52" y2="152" stroke="#ffffff" stroke-opacity="0.28" stroke-width="2.5"/>
+
+  <!-- Row 2 — Group level (indented) -->
+  <rect x="68"  y="108" width="82"  height="13" rx="3" fill="#ffffff" fill-opacity="0.55"/>
+  <line x1="52" y1="114" x2="68" y2="114" stroke="#ffffff" stroke-opacity="0.28" stroke-width="2.5"/>
+
+  <!-- Row 3 — Account level (more indented) -->
+  <rect x="88"  y="133" width="60"  height="12" rx="3" fill="#ffffff" fill-opacity="0.35"/>
+  <line x1="52" y1="139" x2="88" y2="139" stroke="#ffffff" stroke-opacity="0.22" stroke-width="2"/>
+
+  <!-- Row 4 — Account level (sibling) -->
+  <rect x="88"  y="158" width="74"  height="12" rx="3" fill="#ffffff" fill-opacity="0.35"/>
+  <line x1="52" y1="164" x2="88" y2="164" stroke="#ffffff" stroke-opacity="0.22" stroke-width="2"/>
+
+  <!-- O(1) lookup badge — bottom-right accent -->
+  <rect x="168" y="168" width="52" height="24" rx="8" fill="#34d399"/>
+  <text x="194" y="184" font-family="ui-monospace, monospace" font-size="12"
+        font-weight="700" fill="#0a358a" text-anchor="middle">O(1)</text>
+</svg>

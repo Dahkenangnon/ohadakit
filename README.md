@@ -1,5 +1,8 @@
 <div align="center">
 
+<img src="./assets/banner.png" alt="OhadaKit banner" width="100%" />
+
+
 <h1>OhadaKit</h1>
 
 <p><strong>TypeScript SDK for the OHADA/SYSCOHADA chart of accounts</strong><br/>
@@ -16,6 +19,8 @@ O(1) lookups · fluent query builder · custom accounts · i18n · export · zer
 ---
 
 OhadaKit is a production-ready SDK for working with the **OHADA/SYSCOHADA accounting plan** — the standardised chart of accounts used across 17 West and Central African states. It ships the full 1 000+ account tree out of the box and exposes a composable, type-safe API for lookups, querying, custom extensions, multilingual names, and data export.
+
+Live demo: https://ohadakit.claviscore.com
 
 **It manages the chart of accounts.** Journal entries, balances, and financial statements belong in your application.
 

@@ -1,0 +1,265 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 1200" role="img"
+     aria-label="OhadaKit — OHADA/SYSCOHADA chart of accounts SDK. O(1) lookups, fluent query builder, i18n, custom accounts, zero dependencies.">
+  <title>OhadaKit — OHADA/SYSCOHADA chart of accounts SDK</title>
+
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%"  stop-color="#0a358a"/>
+      <stop offset="55%" stop-color="#0e3fa8"/>
+      <stop offset="100%" stop-color="#1146b8"/>
+    </linearGradient>
+
+    <radialGradient id="halo" cx="600" cy="180" r="900" gradientUnits="userSpaceOnUse">
+      <stop offset="0%"  stop-color="#5b8cff" stop-opacity="0.20"/>
+      <stop offset="60%" stop-color="#5b8cff" stop-opacity="0"/>
+    </radialGradient>
+
+    <pattern id="dots" x="0" y="0" width="22" height="22" patternUnits="userSpaceOnUse">
+      <circle cx="1" cy="1" r="0.9" fill="#ffffff" fill-opacity="0.07"/>
+    </pattern>
+
+    <style><![CDATA[
+      .title    { font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Inter, sans-serif;
+                  font-weight: 600; letter-spacing: -0.02em; fill: #ffffff; }
+      .title-em { font-family: ui-serif, "New York", "Iowan Old Style", Georgia, serif;
+                  font-style: italic; font-weight: 400; fill: #b9d4ff; }
+      .sub      { font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Inter, sans-serif;
+                  fill: #ffffff; fill-opacity: 0.78; }
+      .mono     { font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace; }
+      .label    { font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Inter, sans-serif;
+                  font-weight: 600; fill: #ffffff; }
+      .label-mono { font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+                    fill: #b9d4ff; font-weight: 500; }
+      .acc-class { font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Inter, sans-serif;
+                   font-weight: 700; fill: #ffffff; }
+      .acc-code  { font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+                   font-weight: 600; fill: #34d399; }
+      .acc-name  { font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Inter, sans-serif;
+                   fill: #ffffff; fill-opacity: 0.85; }
+      .acc-badge { font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+                   font-weight: 600; fill: #0a358a; font-size: 11px; }
+      .marker   { stroke: #ffffff; stroke-opacity: 0.35; stroke-width: 1; fill: none; }
+      .arrow    { stroke: #ffffff; stroke-opacity: 0.70; stroke-width: 1.5; fill: none;
+                  stroke-linecap: round; stroke-linejoin: round; }
+      .tree-line { stroke: #ffffff; stroke-opacity: 0.20; stroke-width: 1.5; fill: none; }
+    ]]></style>
+
+    <marker id="arrowhead" viewBox="0 0 10 10" refX="9" refY="5"
+            markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 Z" fill="#ffffff" fill-opacity="0.70"/>
+    </marker>
+    <marker id="arrowhead-em" viewBox="0 0 10 10" refX="9" refY="5"
+            markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 Z" fill="#34d399"/>
+    </marker>
+  </defs>
+
+  <!-- Background layers -->
+  <rect width="1200" height="1200" fill="url(#bg)"/>
+  <rect width="1200" height="1200" fill="url(#halo)"/>
+  <rect width="1200" height="1200" fill="url(#dots)"/>
+
+  <!-- Corner crosshair markers -->
+  <g class="marker">
+    <path d="M 24 14 L 24 34 M 14 24 L 34 24"/>
+    <path d="M 1176 14 L 1176 34 M 1166 24 L 1186 24"/>
+    <path d="M 24 1166 L 24 1186 M 14 1176 L 34 1176"/>
+    <path d="M 1176 1166 L 1176 1186 M 1166 1176 L 1186 1176"/>
+  </g>
+
+  <!-- ─── Header ───────────────────────────────────────────── -->
+  <text x="600" y="112" class="title" font-size="60" text-anchor="middle">OhadaKit</text>
+  <text x="600" y="163" class="sub" font-size="22" text-anchor="middle">
+    TypeScript SDK for <tspan class="title-em">OHADA&#160;&amp;&#160;SYSCOHADA</tspan> chart of accounts
+  </text>
+  <text x="600" y="203" class="label-mono" font-size="13" text-anchor="middle">
+    9 CLASSES · 1000+ ACCOUNTS · O(1) LOOKUPS · ZERO DEPS
+  </text>
+
+  <!-- ─── Account hierarchy diagram ────────────────────────── -->
+  <!--
+    Showing an OHADA account tree excerpt:
+      Class 4  — Comptes de tiers (Receivables & Payables)
+        41       Clients et comptes rattachés
+          411      Clients
+            4111     Clients — ventes de marchandises
+            4118     Clients — autres créances
+          412      Clients — effets à recevoir
+        44       État et collectivités publiques
+          441      État — impôts sur bénéfices
+  -->
+
+  <!-- ── Class 4 row (root) ── -->
+  <g transform="translate(100, 290)">
+    <!-- Class pill background -->
+    <rect x="0" y="0" width="1000" height="72" rx="12"
+          fill="#ffffff" fill-opacity="0.08" stroke="#34d399" stroke-opacity="0.60" stroke-width="1.5"/>
+    <!-- Class badge -->
+    <rect x="16" y="14" width="72" height="44" rx="8" fill="#34d399"/>
+    <text x="52" y="42" class="acc-badge" font-size="20" text-anchor="middle" fill="#0a358a" font-weight="800">4</text>
+    <!-- Class label -->
+    <text x="108" y="34" class="acc-class" font-size="20">Class 4</text>
+    <text x="108" y="57" class="acc-name" font-size="15">Comptes de tiers — Receivables &amp; Payables</text>
+    <!-- O(1) badge -->
+    <rect x="900" y="18" width="76" height="36" rx="8" fill="#34d399" fill-opacity="0.20" stroke="#34d399" stroke-opacity="0.55"/>
+    <text x="938" y="41" class="label-mono" font-size="14" text-anchor="middle" fill="#34d399">O(1)</text>
+  </g>
+
+  <!-- Vertical tree connector from Class 4 -->
+  <line x1="178" y1="362" x2="178" y2="780" class="tree-line"/>
+
+  <!-- ── Account group 41 ── -->
+  <g transform="translate(178, 395)">
+    <line x1="0" y1="30" x2="40" y2="30" class="tree-line"/>
+    <rect x="40" y="0" width="900" height="60" rx="10"
+          fill="#ffffff" fill-opacity="0.06" stroke="#ffffff" stroke-opacity="0.18" stroke-width="1"/>
+    <text x="60" y="25" class="acc-code" font-size="18">41</text>
+    <text x="100" y="25" class="acc-name" font-size="16">Clients et comptes rattachés</text>
+    <text x="60" y="47" class="label-mono" font-size="12" fill="#b9d4ff">level: 2  ·  children: 4  ·  parent: "4"</text>
+  </g>
+
+  <!-- Vertical connector from 41 -->
+  <line x1="238" y1="455" x2="238" y2="640" class="tree-line"/>
+
+  <!-- ── Account 411 ── -->
+  <g transform="translate(238, 470)">
+    <line x1="0" y1="30" x2="40" y2="30" class="tree-line"/>
+    <rect x="40" y="0" width="840" height="58" rx="10"
+          fill="#ffffff" fill-opacity="0.05" stroke="#ffffff" stroke-opacity="0.14" stroke-width="1"/>
+    <text x="58" y="24" class="acc-code" font-size="17">411</text>
+    <text x="106" y="24" class="acc-name" font-size="15">Clients</text>
+    <text x="58" y="44" class="label-mono" font-size="11" fill="#b9d4ff">level: 3  ·  isLeaf: false</text>
+  </g>
+
+  <!-- Vertical connector from 411 -->
+  <line x1="298" y1="528" x2="298" y2="638" class="tree-line"/>
+
+  <!-- ── Account 4111 (leaf) ── -->
+  <g transform="translate(298, 543)">
+    <line x1="0" y1="26" x2="36" y2="26" class="tree-line"/>
+    <rect x="36" y="0" width="790" height="52" rx="9"
+          fill="#34d399" fill-opacity="0.10" stroke="#34d399" stroke-opacity="0.40" stroke-width="1"/>
+    <text x="52" y="22" class="acc-code" font-size="16">4111</text>
+    <text x="108" y="22" class="acc-name" font-size="14">Clients — ventes de marchandises</text>
+    <text x="52" y="40" class="label-mono" font-size="11" fill="#34d399">level: 4  ·  isLeaf: true  ·  debit/credit: DR</text>
+  </g>
+
+  <!-- ── Account 4118 (leaf, sibling) ── -->
+  <g transform="translate(298, 607)">
+    <line x1="0" y1="26" x2="36" y2="26" class="tree-line"/>
+    <rect x="36" y="0" width="790" height="52" rx="9"
+          fill="#34d399" fill-opacity="0.08" stroke="#34d399" stroke-opacity="0.30" stroke-width="1"/>
+    <text x="52" y="22" class="acc-code" font-size="16">4118</text>
+    <text x="108" y="22" class="acc-name" font-size="14">Clients — autres créances</text>
+    <text x="52" y="40" class="label-mono" font-size="11" fill="#34d399">level: 4  ·  isLeaf: true  ·  debit/credit: DR</text>
+  </g>
+
+  <!-- ── Account 44 (second group) ── -->
+  <g transform="translate(178, 685)">
+    <line x1="0" y1="30" x2="40" y2="30" class="tree-line"/>
+    <rect x="40" y="0" width="900" height="60" rx="10"
+          fill="#ffffff" fill-opacity="0.06" stroke="#ffffff" stroke-opacity="0.18" stroke-width="1"/>
+    <text x="60" y="25" class="acc-code" font-size="18">44</text>
+    <text x="100" y="25" class="acc-name" font-size="16">État et collectivités publiques</text>
+    <text x="60" y="47" class="label-mono" font-size="12" fill="#b9d4ff">level: 2  ·  children: 6</text>
+  </g>
+
+  <!-- ─── Annotations ─────────────────────────────────────── -->
+
+  <!-- Annotation: isLeaf badge pointing to 4111 -->
+  <g>
+    <rect x="90" y="535" width="180" height="44" rx="8"
+          fill="#34d399" fill-opacity="0.16" stroke="#34d399" stroke-opacity="0.50"/>
+    <text x="180" y="552" class="label-mono" font-size="12" text-anchor="middle" fill="#34d399">isLeaf: true</text>
+    <text x="180" y="570" class="label-mono" font-size="11" text-anchor="middle" fill="#b9d4ff">drillable leaf node</text>
+    <path class="arrow" stroke="#34d399" marker-end="url(#arrowhead-em)"
+          d="M 270 557 L 334 569"/>
+  </g>
+
+  <!-- Annotation: query builder pointing to group 41 -->
+  <g>
+    <rect x="90" y="390" width="200" height="44" rx="8"
+          fill="#ffffff" fill-opacity="0.08" stroke="#ffffff" stroke-opacity="0.25"/>
+    <text x="190" y="408" class="label-mono" font-size="12" text-anchor="middle" fill="#b9d4ff">.query()</text>
+    <text x="190" y="426" class="label-mono" font-size="11" text-anchor="middle" fill="#b9d4ff">.byClass(4).level(2)</text>
+    <path class="arrow" marker-end="url(#arrowhead)"
+          d="M 280 412 L 218 424"/>
+  </g>
+
+  <!-- Annotation: O(1) lookup pointing to Class 4 -->
+  <g>
+    <text x="1130" y="320" class="label-mono" font-size="13" text-anchor="end" fill="#34d399">get("4")</text>
+    <text x="1130" y="340" class="label-mono" font-size="11" text-anchor="end" fill="#b9d4ff">O(1) map lookup</text>
+    <path class="arrow" stroke="#34d399" marker-end="url(#arrowhead-em)"
+          d="M 1100 328 L 1105 328"/>
+  </g>
+
+  <!-- ─── Feature cards row ─────────────────────────────────── -->
+  <g transform="translate(100, 810)">
+    <!-- Card 1 -->
+    <g>
+      <rect x="0" y="0" width="210" height="80" rx="12"
+            fill="#ffffff" fill-opacity="0.06" stroke="#ffffff" stroke-opacity="0.20"/>
+      <text x="20" y="28" class="label" font-size="15">O(1) Lookups</text>
+      <text x="20" y="48" class="label-mono" font-size="11" fill="#b9d4ff">Map-based indexes</text>
+      <text x="20" y="65" class="label-mono" font-size="11" fill="#b9d4ff">Trie prefix search</text>
+    </g>
+    <!-- Card 2 -->
+    <g transform="translate(228,0)">
+      <rect x="0" y="0" width="210" height="80" rx="12"
+            fill="#ffffff" fill-opacity="0.06" stroke="#ffffff" stroke-opacity="0.20"/>
+      <text x="20" y="28" class="label" font-size="15">Query Builder</text>
+      <text x="20" y="48" class="label-mono" font-size="11" fill="#b9d4ff">Filter by class, level</text>
+      <text x="20" y="65" class="label-mono" font-size="11" fill="#b9d4ff">parent, name, regex</text>
+    </g>
+    <!-- Card 3 -->
+    <g transform="translate(456,0)">
+      <rect x="0" y="0" width="210" height="80" rx="12"
+            fill="#ffffff" fill-opacity="0.06" stroke="#ffffff" stroke-opacity="0.20"/>
+      <text x="20" y="28" class="label" font-size="15">i18n</text>
+      <text x="20" y="48" class="label-mono" font-size="11" fill="#b9d4ff">FR · EN · PT · ES</text>
+      <text x="20" y="65" class="label-mono" font-size="11" fill="#b9d4ff">graceful fallback</text>
+    </g>
+    <!-- Card 4 -->
+    <g transform="translate(684,0)">
+      <rect x="0" y="0" width="216" height="80" rx="12"
+            fill="#34d399" fill-opacity="0.10" stroke="#34d399" stroke-opacity="0.40"/>
+      <text x="20" y="28" class="label" font-size="15" fill="#34d399">Custom Accounts</text>
+      <text x="20" y="48" class="label-mono" font-size="11" fill="#34d399">Non-destructive overlay</text>
+      <text x="20" y="65" class="label-mono" font-size="11" fill="#b9d4ff">sub-accounts + overrides</text>
+    </g>
+  </g>
+
+  <!-- ─── Code snippet ──────────────────────────────────────── -->
+  <g transform="translate(100, 930)">
+    <rect x="0" y="0" width="1000" height="120" rx="12"
+          fill="#000000" fill-opacity="0.30" stroke="#ffffff" stroke-opacity="0.12"/>
+    <text x="24" y="32"  class="mono" font-size="15" fill="#b9d4ff">import</text>
+    <text x="88" y="32"  class="mono" font-size="15" fill="#ffffff">{ OhadaKit }</text>
+    <text x="222" y="32" class="mono" font-size="15" fill="#b9d4ff">from</text>
+    <text x="264" y="32" class="mono" font-size="15" fill="#34d399">'ohadakit'</text>
+    <text x="24" y="62"  class="mono" font-size="15" fill="#b9d4ff">const</text>
+    <text x="82" y="62"  class="mono" font-size="15" fill="#ffffff">kit = </text>
+    <text x="140" y="62" class="mono" font-size="15" fill="#b9d4ff">new</text>
+    <text x="174" y="62" class="mono" font-size="15" fill="#ffffff">OhadaKit()</text>
+    <text x="24" y="92"  class="mono" font-size="15" fill="#ffffff">kit</text>
+    <text x="52" y="92"  class="mono" font-size="15" fill="#b9d4ff">.query()</text>
+    <text x="144" y="92" class="mono" font-size="15" fill="#b9d4ff">.byClass(</text>
+    <text x="252" y="92" class="mono" font-size="15" fill="#34d399">4</text>
+    <text x="264" y="92" class="mono" font-size="15" fill="#b9d4ff">)</text>
+    <text x="278" y="92" class="mono" font-size="15" fill="#b9d4ff">.level(</text>
+    <text x="362" y="92" class="mono" font-size="15" fill="#34d399">3</text>
+    <text x="374" y="92" class="mono" font-size="15" fill="#b9d4ff">)</text>
+    <text x="388" y="92" class="mono" font-size="15" fill="#b9d4ff">.get()</text>
+    <text x="444" y="92" class="mono" font-size="13" fill="#ffffff" fill-opacity="0.40">// → Account[]</text>
+    <text x="24" y="110" class="mono" font-size="13" fill="#ffffff" fill-opacity="0.30">// Zero dependencies · ESM + CJS + browser · TypeScript 5+</text>
+  </g>
+
+  <!-- ─── Footer ─────────────────────────────────────────────── -->
+  <line x1="100" y1="1090" x2="1100" y2="1090"
+        stroke="#ffffff" stroke-opacity="0.14" stroke-width="1"/>
+  <text x="100"  y="1120" class="label-mono" font-size="14" fill="#b9d4ff">ohadakit.claviscore.com</text>
+  <text x="1100" y="1120" class="label-mono" font-size="13" fill="#b9d4ff" text-anchor="end" fill-opacity="0.70">
+    github.com/Dahkenangnon/ohadakit · MIT
+  </text>
+</svg>
